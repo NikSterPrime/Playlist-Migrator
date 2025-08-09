@@ -1,16 +1,22 @@
-import { useState } from 'react'
-import './App.css'
-import Landing from './pages/Landing'
-import Navbar from './components/Navbar'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Playlists from "./pages/Playlists";
+import Convert from "./pages/Convert";
+import Results from "./pages/Results";
 
-function App() {
-
+export default function App() {
   return (
-    <>
+    <Router>
       <Navbar />
-      <Landing />
-    </> 
-    )
+      <div className="max-w-5xl mx-auto p-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/convert" element={<Convert />} />
+          <Route path="/results" element={<Results />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
-
-export default App
