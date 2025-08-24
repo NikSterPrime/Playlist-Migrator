@@ -19,6 +19,7 @@ app.get('/', (req,res) => {
 const scopes = [
     "playlist-read-private",
     "playlist-read-collaborative",
+    "user-library-read",
 ].join(" ");
 
 app.get("/auth/spotify/login", (req,res) => {
@@ -52,18 +53,82 @@ res.redirect('http://127.0.0.1:5173/playlists');
 }
 });
 
-app.get("/spotify/playlists",async(req,res)=> {
-    const token = req.cookies.spotify_access_token;
-    if(!token) return res.status(401).json({error:"Not authenticated"});
-    try {
-        const response = await axios.get("https://api.spotify.com/v1/me/playlists",{
-            headers:{Authorization:`Bearer ${token}`}
-        });
-        res.json(response.data);
-    }catch(error){
-        console.error(error.response?.data || error.message);
-        res.status(500).json({error:"Failed to fetch playlists"});
-    }
+app.get("/auth/spotify/refresh", async (req, res) => {
+  const refreshToken = req.cookies.spotify_refresh_token;
+  if (!refreshToken) {
+    return res.status(401).json({ error: "No refresh token available" });
+  }
+
+  try {
+    const response = await axios.post(
+      "https://accounts.spotify.com/api/token",
+      new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+        client_id: process.env.SPOTIFY_CLIENT_ID,
+        client_secret: process.env.SPOTIFY_CLIENT_SECRET,
+      }).toString(),
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
+
+    const { access_token, expires_in } = response.data;
+
+    // overwrite the old access token cookie
+    res.cookie("spotify_access_token", access_token, { httpOnly: true });
+
+    res.json({ access_token, expires_in });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to refresh token" });
+  }
 });
+;
+
+app.get("/auth/spotify/refresh", async (req, res) => {
+  const refreshToken = req.cookies.spotify_refresh_token;
+  if (!refreshToken) {
+    return res.status(401).json({ error: "No refresh token available" });
+  }
+
+  try {
+    const response = await axios.post(
+      "https://accounts.spotify.com/api/token",
+      new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+        client_id: process.env.SPOTIFY_CLIENT_ID,
+        client_secret: process.env.SPOTIFY_CLIENT_SECRET,
+      }).toString(),
+      { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    );
+
+    const { access_token, expires_in } = response.data;
+
+    // overwrite the old access token cookie
+    res.cookie("spotify_access_token", access_token, { httpOnly: true });
+
+    res.json({ access_token, expires_in });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to refresh token" });
+  }
+});
+
+app.get("/spotify/playlists", async (req, res) => {
+  const token = req.cookies.spotify_access_token;
+  if (!token) return res.status(401).json({ error: "Not authenticated" });
+
+  try {
+    const response = await fetch("https://api.spotify.com/v1/me/playlists", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error("Spotify error:", err);
+    res.status(500).json({ error: "Failed to fetch playlists" });
+  }
+});
+
 
 app.listen(PORT,() => console.log(`Server running on port ${PORT}`));
