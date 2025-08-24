@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import PlaylistCard from "../components/PlaylistCard";
 import { useState } from "react";
+import axios from "axios";
 
 export default function Playlists() {
   const [playlists, setPlaylists] = useState([]);
@@ -10,21 +11,18 @@ export default function Playlists() {
   useEffect(() => {
     const fetchPlaylists = async() => {
       try {
-          const res = await fetch("http://127.0.0.1:5050/spotify/playlists", {
-          method:"GET",  
-          credentials:"include",
-          });
-          if (!res.ok) {
-            throw new Error("Failed to fetch playlists");   
-          }
-          const data = await res.json();
-          setPlaylists(data.items);
-    } catch(err)
-    {
-      setError(err.message);
-    } finally {
+        const {data} = await axios.get("http://127.0.0.1:5050/spotify/playlists",
+          { withCredentials: true, }
+        );
+        setPlaylists(data.items);
+      }
+      catch(err)
+      {
+        setError(err.message);
+      }
+      finally {
         setLoading(false);
-    }
+      }
   };
 
   fetchPlaylists();
