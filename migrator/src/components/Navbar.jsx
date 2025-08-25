@@ -4,16 +4,16 @@ import { Link } from "react-router-dom";
 function Navbar() {
 
     return (
-        <nav className="p-6 bg-[#1DB954] text-white mb-6">
+        <nav className="p-6 bg-[#000] text-white">
             <div className="flex justify-center items-center">
                 <div className="flex-1">
                     <h1 className="font-bold">Playlist Migrator</h1>
                 </div>
                 <div className="space-x-4">
                     <Link to="/" className="hover:underline">Home</Link>
-                    <Link to="/playlists">Playlists</Link>
-                    <Link to="/convert">Convert</Link>
-                    <Link to="/results">Results</Link>
+                    <Link to="/playlists" className="hover:underline">Playlists</Link>
+                    <Link to="/convert" className="hover:underline">Convert</Link>
+                    <Link to="/results"className="hover:underline">Results</Link>
                 </div>
             </div>    
         </nav>
