@@ -29,5 +29,5 @@ React Router: For handling client-side routing.
 
 Context API: Manages global state, such as user authentication status.
 
-CSS Modules: For component-level styling.
+TailwindCSS for responsive webpage for mobile phones and other screen sizes.
 
