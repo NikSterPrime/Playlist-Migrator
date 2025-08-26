@@ -16,6 +16,11 @@ export default function Home() {
       >
         Login with Spotify
       </a>
+      <a
+        href="http://127.0.0.1:5050/youtube/login"
+      >
+        Login with YouTube
+      </a>
     </div>
   );
 }
