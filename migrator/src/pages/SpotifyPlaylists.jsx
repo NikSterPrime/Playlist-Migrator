@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import PlaylistCard from "../components/PlaylistCard";
 import { useState } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Playlists = () => {
   const [playlists, setPlaylists] = useState([]);
@@ -31,6 +32,19 @@ const Playlists = () => {
       .catch(err => console.error(err.message));
   };
   console.log(tracks);
+
+  async function searchSong(query) {
+  const res = await fetch(`http://127.0.0.1:5050/youtube/search?query=${encodeURIComponent(query)}`, {
+    credentials: "include" // VERY important: sends cookies
+  });
+  const data = await res.json();
+  console.log("YouTube search results:", data);
+}
+
+// Example usage:
+searchSong("Shape of You");
+
+
   return (
     <div>
       <h1>Your Spotify Playlist</h1>
