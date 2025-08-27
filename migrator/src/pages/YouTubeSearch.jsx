@@ -7,14 +7,14 @@ const YouTubeSearch = () => {
 
   const searchSong = async () => {
     try {
-      const res = await axios.get(
-        `http://127.0.0.1:5050/youtube/search`,
-        {
-          params: { query },        // ✅ query params
-          withCredentials: true,    // ✅ send cookies
-        }
-      );
-      setResults(res.data.items || []);
+      const res = await axios.get("http://127.0.0.1:5050/youtube/search", {
+        params: { query },
+        withCredentials: true,
+      });
+
+      // Backend only returns a single { videoId, title }
+      // Wrap it in an array so map() works
+      setResults([res.data]);  
     } catch (err) {
       console.error("Error fetching:", err);
     }
@@ -35,7 +35,7 @@ const YouTubeSearch = () => {
         />
         <button
           onClick={searchSong}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          className="bg-red-500 text-white px-4 py-2 rounded"
         >
           Search
         </button>
@@ -44,16 +44,10 @@ const YouTubeSearch = () => {
       {/* Results */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {results.map((video) => (
-          <div key={video.id.videoId} className="p-4 border rounded shadow">
-            <img
-              src={video.snippet.thumbnails.medium.url}
-              alt={video.snippet.title}
-              className="rounded mb-2"
-            />
-            <h2 className="font-semibold">{video.snippet.title}</h2>
-            <p className="text-sm text-gray-500">{video.snippet.channelTitle}</p>
+          <div key={video.videoId} className="p-4 border rounded shadow">
+            <h2 className="font-semibold">{video.title}</h2>
             <a
-              href={`https://www.youtube.com/watch?v=${video.id.videoId}`}
+              href={`https://www.youtube.com/watch?v=${video.videoId}`}
               target="_blank"
               rel="noreferrer"
               className="text-blue-600 text-sm"

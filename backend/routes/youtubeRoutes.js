@@ -19,28 +19,31 @@ router.get("/callback", async (req, res) => {
   const tokenUrl = "https://oauth2.googleapis.com/token";
 
   try {
-    const response = await fetch(tokenUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
+    const response = await axios.post(
+      tokenUrl,
+      new URLSearchParams({
         code,
         client_id: process.env.YOUTUBE_CLIENT_ID,
         client_secret: process.env.YOUTUBE_CLIENT_SECRET,
         redirect_uri: process.env.YOUTUBE_REDIRECT_URI,
-        grant_type: "authorization_code"
-      })
-    });
+        grant_type: "authorization_code",
+      }).toString(),
+      {
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      }
+    );
 
-    const data = await response.json();
+    const data = response.data;
     console.log("YouTube Tokens:", data);
 
     res.cookie("youtube_access_token", data.access_token, { httpOnly: true });
-    res.redirect("http://localhost:5173/youtubeplaylists");
+    res.redirect("http://127.0.0.1:5173/youtubeplaylists");
   } catch (err) {
-    console.error("YouTube Auth Error:", err);
+    console.error("YouTube Auth Error:", err.response?.data || err.message);
     res.status(500).send("YouTube authentication failed");
   }
 });
+
 
 router.get("/playlists", async (req, res) => {
   const token = req.cookies.youtube_access_token;
