@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const spotifyRoutes = require('./routes/spotifyRoutes');
 const youtubeRoutes = require('./routes/youtubeRoutes');
+const migrateRoutes = require('./routes/migrate');
 
 dotenv.config();
 const app = express();
@@ -24,5 +25,5 @@ app.get('/', (req,res) => {
 app.use("/auth/spotify", spotifyRoutes);
 app.use("/spotify", spotifyRoutes);
 app.use("/youtube", youtubeRoutes);
-
+app.use("/migrate", migrateRoutes);
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

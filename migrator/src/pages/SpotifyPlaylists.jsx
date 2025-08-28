@@ -33,17 +33,18 @@ const Playlists = () => {
   };
   console.log(tracks);
 
-  async function searchSong(query) {
-  const res = await fetch(`http://127.0.0.1:5050/youtube/search?query=${encodeURIComponent(query)}`, {
-    credentials: "include" // VERY important: sends cookies
-  });
-  const data = await res.json();
-  console.log("YouTube search results:", data);
-}
-
-// Example usage:
-searchSong("Shape of You");
-
+  const migratetoYoutube = async (playlists) => {
+    try{
+      const res = await axios.post("http://127.0.0.1:5050/migrate/spotifytoyoutube",{
+        spotifyPlayist: playlists,
+        youtubePlaylistTitile: playlists.name
+      },{withCredentials: true});
+      alert(`Playlist migrated successfully:${res.data.youtubePlaylistId}`);
+    }catch(err){
+      console.error("Migration error:",err);
+      alert("Migration failed. Please try again.");
+    }
+  };
 
   return (
     <div>
@@ -57,6 +58,12 @@ searchSong("Shape of You");
                       <img src = {pl.images?.url} alt = {pl.name}/>
                       <h2>{pl.name}</h2>
                     </button>
+                    <button
+                      onClick={() => migratetoYoutube(pl)}
+                      className="bg-red-500 text-white px-3 py-1 rounded">
+                      Migrate to YouTube
+                    </button>
+
                   </li>
                   {isOpen && selectedPlaylist === pl.name && (
                     <div className="popup">
