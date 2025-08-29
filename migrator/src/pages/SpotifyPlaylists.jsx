@@ -36,8 +36,8 @@ const Playlists = () => {
   const migratetoYoutube = async (playlists) => {
     try{
       const res = await axios.post("http://127.0.0.1:5050/migrate/spotifytoyoutube",{
-        spotifyPlayist: playlists,
-        youtubePlaylistTitile: playlists.name
+        spotifyPlaylist: playlists,
+        youtubePlaylistTitle: playlists.name
       },{withCredentials: true});
       alert(`Playlist migrated successfully:${res.data.youtubePlaylistId}`);
     }catch(err){
@@ -55,12 +55,12 @@ const Playlists = () => {
                 <ul style={{listStyleType: "none"}}>
                   <li key={pl.id}>
                     <button onClick={() => functioncallback(pl.id,pl.name)}>
-                      <img src = {pl.images?.url} alt = {pl.name}/>
+                      <img src = {pl.images?.[0]?.url} alt = {pl.name}/>
                       <h2>{pl.name}</h2>
                     </button>
                     <button
                       onClick={() => migratetoYoutube(pl)}
-                      className="bg-red-500 text-white px-3 py-1 rounded">
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-white">
                       Migrate to YouTube
                     </button>
 
