@@ -13,8 +13,6 @@ function Navbar() {
                     <Link to="/" className="hover:underline">Home</Link>
                     <Link to="/spotifyplaylists" className="hover:underline">Spotify Playlists</Link>
                     <Link to="/youtubeplaylists" className="hover:underline">YouTube Playlists</Link>
-                    <Link to="/convert" className="hover:underline">Convert</Link>
-                    <Link to="/results"className="hover:underline">Results</Link>
                 </div>
             </div>    
         </nav>

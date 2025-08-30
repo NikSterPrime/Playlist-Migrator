@@ -10,13 +10,11 @@ export default function App() {
   return (
     <Router>
       <Navbar />
-      <div className="bg-[#000] pt-6 min-h-screen text-white">
+      <div className="pt-6 min-h-screen text-white" style={{background:"linear-gradient(to bottom,#121212,#0f0f0f ,#32285C)"}}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/spotifyplaylists" element={<Playlists />} />
           <Route path="/youtubeplaylists" element={<YtPlaylists />} />
-          <Route path="/convert" element={<Convert />} />
-          <Route path="/results" element={<Results />} />
         </Routes>
       </div>
     </Router>

@@ -37,7 +37,7 @@ router.get("/callback", async (req, res) => {
     res.cookie("spotify_access_token", access_token, { httpOnly: true });
     res.cookie("spotify_refresh_token", refresh_token, { httpOnly: true });
 
-    res.redirect("http://127.0.0.1:5173/playlists");
+    res.redirect("http://127.0.0.1:5173/spotifyplaylists");
   } catch (error) {
     console.error(error.response?.data || error.message);
     res.send("Error during authentication");
